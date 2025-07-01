@@ -1,10 +1,144 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>회원가입</title>
-</head>
-<body>
-
-</body>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{include/layout}">
+	<th:block layout:fragment="content">
+		<link th:href="@{/css/member/join.css}" rel="stylesheet" type="text/cee">
+		<section>
+			<div id="section_wrap">
+				<div classs="word">
+					<h3>회원가입</h3>
+				</div> <br>
+				<div class="create_account_form">
+					<input type="hidden" id="csrf_token" th:value="${_csrf.token}">
+					<form id="memberAddFrm">
+						<input type="text" name="mem_id" placeholder="아이디"> <br>
+						<input type="password" name="mem_pw" placeholder="비밀번호"> <br>
+						<input type="password" name="mem_pw_check" placeholder="비밀번호 확인"> <br>
+						<input type="text" name="mem_name" placeholder="이름"> <br>
+						<input type="text" id = "mem_email" name="mem_email" placeholder="이메일"> 
+						<select name="mem_email_domain" id="domain" onchange="toggleEmail(this)">
+							<option value="naver.com">naver.com</option>
+							<option value="gmail.com">gmail.com</option>
+							<option value="daum.net">daum.net</option>
+							<option value="kakao.com">kakao.com</option>
+							<option value="nate.com">nate.com</option>
+							<option value="custom">직접입력</option>
+						</select>
+						<input type="text" id="customEmailInsert" style="display:none;" placeholder="입력해주세요">	
+						<input type="button" id="cert_button" value="인증요청"> <br>				
+						<input type="submit" value="가입요청">
+					</form>
+				</div>
+			</div>
+		</section>
+		<script>
+				
+			// 이메일 인증코드 발송
+			document.AddEventListener("DOMContentLoaded", function (){
+				const btn = document.getElementById("cert_button");
+				
+				btn.addEventListener("click",function(){
+					const email = document.getElementById("mem_email").value;
+					const domain = document.getElementById("domain").value;
+					const fullEmail = email + "@" + domain;
+					
+					fetch("/CertEmailSend", {
+						method : "POST",
+						header : {
+							"Content-Type" : "application/json",
+							"X-CSRF-TOKEN" : document.getElementById("csrf_token").value
+						},
+						body : JSON.stringify({ email : fullEmail })
+					})
+					.then(res => res.json())
+					.then(data => {
+						if(data.success){
+							alert("이메일 발송 성공");
+						}else{
+							alert("실패 : " + data.message);
+						}
+					});
+				});
+			});
+		
+			// 이메일 직접입력 토글
+			function toggleEmail(select){
+				const customInput = document.getElementById("customEmailInsert");
+				customInput.style.display = (select.value === "custom") ? "inline" : "none";
+			}
+			
+			// form 제출
+			const form = document.getElemmentById("memberAddFrm");
+			form.addEventListener('submit',(e) => {
+				e.preventDefault();
+				
+				let vali_check = false;
+				let vali_text = "";
+				if(form.mem_id.value == ''){
+					vali_text = "아이디를 입력해주세요";
+					form.mem_id.focus();
+				}else if(form.mem_pw.value == ''){
+					vali_text = "비밀번호를 입력해주세요";
+					form.mem_pw.focus();
+				}else if(form.mem_pw_check.value == ''){
+					vali_text = "비밀번호 확인을 입력해주세요"
+					form.mem_pw_check.focus();
+				}else if(form.mem_name.value == ''){
+					vali_text = "이름을 입력해주세요"
+					form.mem_name.focus();
+				}else if(form.mem_email.value == ''){
+					vali_text = "이메일을 입력해주세요"
+					form.mem_email.focus();
+				}else{
+					vali_check = true;
+				}
+				if(vali_check == false){
+					Swal.fire({
+						icon:'error',
+						title:'실패',
+						text: vali_text,
+						confirmButtonText:"닫기"
+					});
+				}else{
+					let obj = {};
+					const payload = new FormData(form);
+					payload.forEach(function(value,key){
+						obj[key] = value;
+					});
+					
+				const jsonData = JSON.stringify(obj);
+				const csrfToken = document.getElementById("csrf_token")
+				
+				fetch('/join', {
+					method:'post',
+					headers : {
+						"Content-Type" : "application/json;charset=utf-8",
+						"Accept" : "application/json",
+						'X-CSRF-TOKEN' : csrfToken
+					},
+					body : jsonData
+				})
+				.then(renponse => response.json())
+				.then(data=> {
+					if(data.res_code == '200'){
+						Swal.fire({
+							icon : 'success',
+							title : '성공',
+							text : data.res_msg
+						}).then((result)=>{
+							location.href="/login";
+						});
+					}else{
+						Swal.fire({
+							icon : 'error',
+							title : '실패',
+							text : data.res_msg
+							})
+						}
+					})
+				}
+			});
+		</script>
+	</th:block>
 </html>
