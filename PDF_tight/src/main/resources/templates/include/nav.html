@@ -6,7 +6,7 @@
 	<nav>
 		<div id="nav_wrap">
 			<div class="menu">
-				<ul sec:authorize="isAnonymout()">
+				<ul sec:authorize="isAnonymous()">
 					<li>
 						<a th:href="@{/login}">로그인</a>
 					</li>
@@ -16,7 +16,7 @@
 				</ul>
 				<ul sec:authorize="isAuthenticated()">
 					<li>
-						<span sec:authentication="principal.dto.emp_name"></span>님 안녕하세요
+						<span sec:authentication="principal.dto.mem_name"></span>님 안녕하세요
 					</li>
 						<form method="post" th:action="@{/logout}">
 							<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
@@ -26,8 +26,5 @@
 			</div>					
 		</div>
 	</nav>
-
-
-
 </th:block>
 </html>

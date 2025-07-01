@@ -46,6 +46,8 @@ dependencies {
 	implementation 'org.mariadb.jdbc:mariadb-java-client'
 	// jpa
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	//postgre
+	runtimeOnly 'org.postgresql:postgresql'
 }
 
 tasks.named('test') {

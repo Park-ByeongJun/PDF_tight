@@ -27,9 +27,8 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests(request ->
-				request.requestMatchers("/").permitAll()
-						.requestMatchers("/board/**").authenticated()
-						.requestMatchers("/join").permitAll())
+				request.requestMatchers("/", "/login", "/join", "/css/**", "/js/**", "/images/**").permitAll()
+						.anyRequest().authenticated())
 			.formLogin(login ->
 				login.loginPage("/login")
 					.loginProcessingUrl("/login")
