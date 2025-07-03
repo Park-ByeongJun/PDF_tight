@@ -15,7 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table
+@Table(name="email_certification")
 @NoArgsConstructor(access=AccessLevel.PROTECTED)
 @AllArgsConstructor(access=AccessLevel.PROTECTED)
 @Getter
@@ -30,7 +30,6 @@ public class EmailCert {
 	private String cerCode;
 	
 	@Column(name="code_time")
-	@CreationTimestamp
 	private LocalDateTime codeTime;
 	
 	@Column(name="pass_yn")

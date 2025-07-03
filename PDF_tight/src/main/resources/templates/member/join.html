@@ -3,10 +3,11 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{include/layout}">
 	<th:block layout:fragment="content">
+<title>회원가입</title>
 		<link th:href="@{/css/member/join.css}" rel="stylesheet" type="text/cee">
 		<section>
 			<div id="section_wrap">
-				<div classs="word">
+				<div class="word">
 					<h3>회원가입</h3>
 				</div> <br>
 				<div class="create_account_form">
@@ -16,8 +17,9 @@
 						<input type="password" name="mem_pw" placeholder="비밀번호"> <br>
 						<input type="password" name="mem_pw_check" placeholder="비밀번호 확인"> <br>
 						<input type="text" name="mem_name" placeholder="이름"> <br>
-						<input type="text" id = "mem_email" name="mem_email" placeholder="이메일"> 
-						<select name="mem_email_domain" id="domain" onchange="toggleEmail(this)">
+						<input type="text" id = "mem_email" name="mem_email" placeholder="이메일"> @
+						<select id="domain" name="domain" onchange="toggleEmail(this)">
+							<option value="" ></option>
 							<option value="naver.com">naver.com</option>
 							<option value="gmail.com">gmail.com</option>
 							<option value="daum.net">daum.net</option>
@@ -26,7 +28,12 @@
 							<option value="custom">직접입력</option>
 						</select>
 						<input type="text" id="customEmailInsert" style="display:none;" placeholder="입력해주세요">	
-						<input type="button" id="cert_button" value="인증요청"> <br>				
+						<input type="button" id="cert_button" value="인증요청"> <br>
+						
+						<input type="text" id="cert_result" style="display:none;" placeholder="인증번호">
+						<input type="button" id="cert_confirm" style="display:none;" value="확인">
+						<br>
+						<br>
 						<input type="submit" value="가입요청">
 					</form>
 				</div>
@@ -35,17 +42,44 @@
 		<script>
 				
 			// 이메일 인증코드 발송
-			document.AddEventListener("DOMContentLoaded", function (){
+			document.addEventListener("DOMContentLoaded", function (){
 				const btn = document.getElementById("cert_button");
-				
 				btn.addEventListener("click",function(){
-					const email = document.getElementById("mem_email").value;
+					const email = document.getElementById("mem_email").value.trim();
 					const domain = document.getElementById("domain").value;
+					const certResult = document.getElementById("cert_result");
+					const certConfirm = document.getElementById("cert_confirm");
+					const customEmail = document.getElementById("customEmailInsert").value.trim();
+					
+					if(domain === 'custom' && customEmail === ''){
+						swal.fire({
+							icon : 'error',
+							title : '실패',
+							text : '이메일을 완성해주세요',
+							confirmButtonText : '확인'
+						});
+						return;
+					} 
+					
+					if(domain === "custom"){
+						domain = customEmail
+					}
+					
 					const fullEmail = email + "@" + domain;
+					
+					if(email === '' || domain === ''){
+						swal.fire({
+							icon : 'error',
+							title : '실패',
+							text : '이메일을 완성해주세요',
+							confirmButtonText : '확인'
+						});
+						return;
+					} 
 					
 					fetch("/CertEmailSend", {
 						method : "POST",
-						header : {
+						headers : {
 							"Content-Type" : "application/json",
 							"X-CSRF-TOKEN" : document.getElementById("csrf_token").value
 						},
@@ -53,10 +87,14 @@
 					})
 					.then(res => res.json())
 					.then(data => {
-						if(data.success){
+						if(data.res_code === "200"){
 							alert("이메일 발송 성공");
+							
+							certResult.style.display = "inline";
+							certConfirm.style.display = "inline";
+							
 						}else{
-							alert("실패 : " + data.message);
+							alert("실패 : " + data.res_msg);
 						}
 					});
 				});
@@ -69,7 +107,8 @@
 			}
 			
 			// form 제출
-			const form = document.getElemmentById("memberAddFrm");
+			const form = document.getElementById("memberAddFrm");
+			const customEmail = document.getElementById("customEmailInsert").value.trim();
 			form.addEventListener('submit',(e) => {
 				e.preventDefault();
 				
@@ -90,6 +129,14 @@
 				}else if(form.mem_email.value == ''){
 					vali_text = "이메일을 입력해주세요"
 					form.mem_email.focus();
+				}else if(form.domain.value == ''){
+					vali_text = "도메인을 입력해주세요"
+					form.domain.focus();
+				}else if(form.domain.value == 'custom'){
+					form.domain.value = customEmail
+					if(customEmail == ''){
+						vali_text = "이메일을 완성해주세요"
+					}
 				}else{
 					vali_check = true;
 				}
@@ -115,11 +162,11 @@
 					headers : {
 						"Content-Type" : "application/json;charset=utf-8",
 						"Accept" : "application/json",
-						'X-CSRF-TOKEN' : csrfToken
+						'X-CSRF-TOKEN' : csrfToken.value
 					},
 					body : jsonData
 				})
-				.then(renponse => response.json())
+				.then(response => response.json())
 				.then(data=> {
 					if(data.res_code == '200'){
 						Swal.fire({
