@@ -38,11 +38,11 @@ public class WebSecurityConfig {
 					.successHandler(new MyLoginSuccessHandler())
 					.failureHandler(new MyLoginFailureHandler()))
 			.logout(logout -> logout.permitAll())
-			.rememberMe(rememberMe ->
-				rememberMe.rememberMeParameter("remember-me")
-						.tokenValiditySeconds(86400 * 7)
-						.alwaysRemember(false)
-						.tokenRepository(tokenRepository()))
+//			.rememberMe(rememberMe ->
+//				rememberMe.rememberMeParameter("remember-me")
+//						.tokenValiditySeconds(86400 * 7)
+//						.alwaysRemember(false)
+//						.tokenRepository(tokenRepository()))
 			.httpBasic(Customizer.withDefaults());
 		return http.build();
 	}

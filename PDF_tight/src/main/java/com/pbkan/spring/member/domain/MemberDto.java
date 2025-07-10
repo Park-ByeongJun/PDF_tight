@@ -25,7 +25,7 @@ public class MemberDto {
 	private String mem_name;
 	private LocalDateTime mem_date;
 	private String mem_email;
-	private String mem_role;
+	private String role_mem;
 	private String mem_yn;
 	
 	private List<GrantedAuthority> authorities;
@@ -37,7 +37,7 @@ public class MemberDto {
 				.memName(mem_name)
 				.memDate(mem_date)
 				.memEmail(mem_email)
-				.memRole(mem_role)
+				.roleMem(role_mem)
 				.memYn(mem_yn)
 				.build();
 	}
@@ -49,7 +49,7 @@ public class MemberDto {
 				.mem_name(member.getMemName())
 				.mem_date(member.getMemDate())
 				.mem_email(member.getMemEmail())
-				.mem_role(member.getMemRole())
+				.role_mem(member.getRoleMem())
 				.mem_yn(member.getMemYn())
 				.build();
 	}

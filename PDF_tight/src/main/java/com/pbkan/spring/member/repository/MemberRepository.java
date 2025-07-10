@@ -6,4 +6,5 @@ import com.pbkan.spring.member.domain.Member;
 
 public interface MemberRepository extends JpaRepository<Member, String>{
 
+	Member findBymemId(String mem_id);
 }

@@ -137,6 +137,9 @@
 					if(customEmail == ''){
 						vali_text = "이메일을 완성해주세요"
 					}
+				}else if(form.mem_pw.value !== form.mem_pw_check.value){
+					vali_text = "비밀번호가 다릅니다."
+					form.mem_pw.focus();
 				}else{
 					vali_check = true;
 				}

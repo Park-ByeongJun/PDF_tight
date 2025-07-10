@@ -24,6 +24,8 @@ public class MemberService {
 		int result = -1;
 		try {
 			dto.setMem_pw(passwordEncoder.encode(dto.getMem_pw()));
+			dto.setRole_mem("member");
+			dto.setMem_yn("Y");
 			Member member = dto.toEntity();
 			memberRepository.save(member);
 			result = 1;

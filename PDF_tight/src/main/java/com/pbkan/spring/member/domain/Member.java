@@ -39,8 +39,8 @@ public class Member {
 	@Column(name="mem_email")
 	private String memEmail;
 	
-	@Column(name="mem_role")
-	private String memRole;
+	@Column(name="role_mem")
+	private String roleMem;
 	
 	@Column(name="mem_yn")
 	private String memYn;
