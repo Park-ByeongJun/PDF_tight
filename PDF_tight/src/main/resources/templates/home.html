@@ -8,7 +8,70 @@ layout:decorate="~{include/layout}">
 </head>
 <body>
 	<th:block layout:fragment="content">
-	메인테스트
+		<div>
+			<ul sec:authorize="isAnonymous()">
+				<span>로그인 하고 PDF 를 마음껏 활용해보세요</span>
+			</ul>
+			<div sec:authorize="isAuthenticated()">
+				<form id="uploadPdf">
+					<input type="file" name="file"><br>
+					<input type="submit" value="등록">
+				</form>
+			</div>		
+		</div>
+		<script>
+			const form = document.getElementById("uploadPdf");
+			const fileCheck = document.querySelector('input[name="file"]');
+			const pdfCheck = ['application/pdf'];
+			if(!pdfCheck.includes(file.type)){
+				Swal.fire({
+					icon:'warning',
+					title:'유효하지 않은 파일',
+					text:'PDF 파일만 업로드할 수 있습니다.'
+				});
+				return;
+			}
+			
+			form.addEventListener('submit',(e)=>{
+				e.preventDefault();
+
+				if(fileCheck.files.length === 0){
+					Swal.fire({
+						icon:'warning',
+						title:'파일 누락',
+						text:'파일을 등록해주세요'
+					});
+					return;
+				}
+					const file = fileCheck.files[0];
+					const upload = new FormData(form);
+					upload.append("file", file);
+					fetch('/uploadPdf',{
+						method:'post',
+						body:upload
+					})
+					.then(response => response.json())
+					.then(data=>{
+						if(data.res_code == "200"){
+							location.href = "/detailPdf";
+						}else{
+							Swal.fire({
+								icon:'error',
+								title:'실패',
+								text:data.res_msg
+							});
+						}
+					})
+					.catch(error => {
+						console.error('업로드 중 오류;', error);
+						Swal.fire({
+							icon:'error',
+							title:'서버 오류',
+							text:'파일 업로드 중 문제가 발생했습니다.'
+						})
+					})
+			});
+		</script>
 	</th:block>
 </body>
 </html>
