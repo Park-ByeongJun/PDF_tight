@@ -1,4 +1,4 @@
-package com.pbkan.spring.pdfDetail.domain;
+ package com.pbkan.spring.pdfDetail.domain;
 
 import java.time.LocalDateTime;
 
@@ -27,7 +27,7 @@ public class PdfDetail {
 	@Id
 	@Column(name="pdf_num")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int pdfNum;
+	private long pdfNum;
 	
 	@Column(name="mem_id")
 	private String memId;

@@ -17,7 +17,7 @@ import lombok.ToString;
 @Builder
 public class PdfDetailDto {
 
-	private int pdf_num;
+	private long pdf_num;
 	private String mem_id;
 	private String pdf_title;
 	private String ori_filename;
