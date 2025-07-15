@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -45,6 +46,7 @@ public class PdfDetail {
 	@CreationTimestamp
 	private LocalDateTime upTime;
 	
-	@Column(name="pdf_text")
+	@Lob
+	@Column(name="pdf_text", columnDefinition = "text")
 	private String pdfText;
 }

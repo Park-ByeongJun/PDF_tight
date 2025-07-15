@@ -22,18 +22,18 @@ public class PdfDetailDto {
 	private String pdf_title;
 	private String ori_filename;
 	private String chn_filename;
-	private LocalDateTime up_time;
 	private String pdf_text;
+	private LocalDateTime up_time;
 	
 	public PdfDetail toEntity() {
 		return PdfDetail.builder()
-				.pdfNum(pdf_num)
+				//.pdfNum(pdf_num)
 				.memId(mem_id)
 				.pdfTitle(pdf_title)
 				.oriFilename(ori_filename)
 				.chnFilename(chn_filename)
-				.upTime(up_time)
 				.pdfText(pdf_text)
+				.upTime(up_time)
 				.build();
 	}
 	
@@ -44,8 +44,8 @@ public class PdfDetailDto {
 				.pdf_title(pdfDetail.getPdfTitle())
 				.ori_filename(pdfDetail.getOriFilename())
 				.chn_filename(pdfDetail.getChnFilename())
-				.up_time(pdfDetail.getUpTime())
 				.pdf_text(pdfDetail.getPdfText())
+				.up_time(pdfDetail.getUpTime())
 				.build();
 	}
 }

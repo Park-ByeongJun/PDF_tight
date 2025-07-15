@@ -1,5 +1,6 @@
 package com.pbkan.spring.pdfDetail.controller;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,17 +27,17 @@ public class PdfDetailApiController {
 	@ResponseBody
 	@PostMapping("/uploadPdf")
 	public Map<String,String> uploadPdf(PdfDetailDto dto, @RequestParam("file") MultipartFile file){
+		
 		Map<String,String> resultMap = new HashMap<String,String>();
 		resultMap.put("res_code", "404");
 		resultMap.put("res_msg", "PDF 등록중 오류가 발생했습니다.");
 		
-		String chnFileName = pdfFileService.upload(file);
-		if(chnFileName != null) {
-			dto.setMem_id(dto.getMem_id());
-			dto.setOri_filename(file.getOriginalFilename());
-			dto.setChn_filename(chnFileName);
-			resultMap.put("res_code", "200");
-			resultMap.put("res_msg", "파일 업로드 성공했습니다.");
+		File saveFile = pdfFileService.upload(file);
+		
+		if(saveFile != null) {
+			pdfFileService.bringText(saveFile, dto.getMem_id(), file.getOriginalFilename());
+				resultMap.put("res_code", "200");
+				resultMap.put("res_msg", "파일 업로드 성공했습니다.");
 		}else {
 			resultMap.put("res_msg", "파일 업로드 실패했습니다.");
 		}

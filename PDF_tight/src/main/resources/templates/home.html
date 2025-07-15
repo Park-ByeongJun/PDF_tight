@@ -13,11 +13,15 @@ layout:decorate="~{include/layout}">
 				<span>로그인 하고 PDF 를 마음껏 활용해보세요</span>
 			</ul>
 			<div sec:authorize="isAuthenticated()">
-				<form id="uploadPdf">
+				<form id="uploadPdf" enctype="multipart/form-data">
+					<input type="hidden" name="_csrf" th:value="${_csrf.token}" />
 					<input type="hidden" name="mem_id" th:value="${#authentication.name}">
 					<input type="file" name="file"><br>
-					<input type="submit" value="등록">
+					<input type="submit" value="업로드">
 				</form>
+				
+				<div id="loading" style="display:none;">처리중입니다 --</div>
+				
 			</div>		
 		</div>
 		<script>
@@ -46,20 +50,25 @@ layout:decorate="~{include/layout}">
 					});
 					return;
 				}
+				
+				document.getElementById('loading').style.display = 'block';
+				
 					const upload = new FormData(form);
-					upload.append("file", file);
+					const csrfToken = document.querySelector('input[name="_csrf"]').value;
+					upload.append("_csrf", csrfToken);
 					fetch('/uploadPdf',{
 						method:'post',
 						body:upload
 					})
 					.then(response => response.json())
 					.then(data=>{
+						document.getElementById('loading').style.display = 'none';
 						if(data.res_code == "200"){
-							location.href = "/detailPdf";
+							location.href = "/pdfDetail";
 						}else{
 							Swal.fire({
 								icon:'error',
-								title:'실패',
+								title:'실패입니다',
 								text:data.res_msg
 							});
 						}

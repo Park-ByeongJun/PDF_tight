@@ -51,6 +51,9 @@ dependencies {
 	//email 발송
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'jakarta.mail:jakarta.mail-api:2.1.2'
+    //pdf 추출
+    implementation 'org.apache.pdfbox:pdfbox:2.0.30'
+    
 }
 
 tasks.named('test') {
