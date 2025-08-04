@@ -27,7 +27,6 @@ public class PdfDetailViewController {
 		return "pdfDetail/pdfDetail";
 	}
 	
-	
 	@GetMapping("/myPdfList")
 	public String myPdfList(Model model) {
 		
