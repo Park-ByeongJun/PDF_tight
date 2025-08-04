@@ -1,10 +1,11 @@
 package com.pbkan.spring.pdfDetail.service;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -59,7 +60,8 @@ public class PdfFileService {
 		try {
 			String chnFileName = saveFile.getName();
 			String bringText = PdfTextExtractor.extractText(saveFile);
-
+			bringText = bringText.replaceAll("[\\x00-\\x08\\x0B\\x0C\\x0E-\\x1F]", "");
+			
 			PdfDetailDto dto = new PdfDetailDto();
 			String title = bringText.length() > 10 ? bringText.substring(0,10) : bringText;
 			dto.setMem_id(memId);
@@ -67,7 +69,6 @@ public class PdfFileService {
 			dto.setChn_filename(chnFileName);
 			dto.setPdf_title(title);
 			dto.setPdf_text(bringText);
-			
 			PdfDetail pdfDetail = dto.toEntity();
 
 			pdfDetailRepository.insertPdfDetail(
@@ -81,5 +82,19 @@ public class PdfFileService {
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public List<PdfDetailDto> selectPdfDetailList(String memId){
+		List<PdfDetail> pdfList = pdfDetailRepository.findByMemId(memId);
+		List<PdfDetailDto> pdfDetailList = new ArrayList<PdfDetailDto>();
+		
+		for (PdfDetail a : pdfList) {
+			PdfDetailDto dto = PdfDetailDto.builder().pdf_num(a.getPdfNum()).pdf_title(a.getPdfTitle())
+								.ori_filename(a.getOriFilename()).chn_filename(a.getChnFilename())
+								.up_time(a.getUpTime()).pdf_text(a.getPdfText()).build();
+								
+			pdfDetailList.add(dto);
+		}
+		return pdfDetailList;
 	}
 }

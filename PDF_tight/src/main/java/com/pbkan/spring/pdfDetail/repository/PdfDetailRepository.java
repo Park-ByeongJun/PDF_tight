@@ -1,5 +1,7 @@
 package com.pbkan.spring.pdfDetail.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +22,7 @@ public interface PdfDetailRepository extends JpaRepository<PdfDetail, Long>{
                          @Param("oriFilename") String oriFilename,
                          @Param("chnFilename") String chnFilename,
                          @Param("pdfText") String pdfText);
+    
+    @Query("SELECT a FROM PdfDetail a WHERE a.memId = :memId")
+    List<PdfDetail> findByMemId(@Param("memId") String memId);
 }
