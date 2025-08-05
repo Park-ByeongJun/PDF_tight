@@ -1,4 +1,4 @@
-package com.pbkan.spring.ai.domain;
+package com.pbkan.spring.session.domain;
 
 import java.time.LocalDateTime;
 
@@ -17,31 +17,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="ai_query")
+@Table(name="chat_session")
 @NoArgsConstructor(access=AccessLevel.PROTECTED)
 @AllArgsConstructor(access=AccessLevel.PROTECTED)
 @Getter
 @Builder
-public class AiQuery {
+public class ChatSession {
 
 	@Id
-	@Column(name="query_num")
+	@Column(name="session_id")
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private int queryNum;
-	
-	@Column(name="pdf_num")
-	private int pdfNum;
+	private int sessionId;
 	
 	@Column(name="mem_id")
 	private String memId;
 	
-	@Column(name="re_question")
-	private String reQuestion;
-	
-	@Column(name="re_response")
-	private String reResponse;
-	
-	@Column(name="que_time")
+	@Column(name="session_time")
 	@CreationTimestamp
-	private LocalDateTime queTime;
+	private LocalDateTime sessionTime;
 }

@@ -1,10 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorate="~{include/layout}">
 <head>
-<meta charset="EUC-KR">
+<meta charset="UTF-8">
 <title>PDF_tight</title>
 </head>
 <body>
-testing
+	<th:block layout:fragment="content">
+		<div>
+			 <input type="hidden" id="pdfText">
+			 <ul id="chatBox"></ul>
+			 <textarea id="questionInput"></textarea>
+			 <button id="sendBtn">질문보내기</button>
+		</div>
+		
+		<script>
+			let isFirstQuestion = true;
+			
+			document.getElementById("sendBtn").addEventListener("click",function(){
+				const question = document.getElementById("questionInput").value;
+				const pdfText = document.getElementById("pdfText").value;
+				
+				const requestData = {
+						question: question
+				};
+				
+				if(isFirstQuestion){
+					requestData.pdfText = pdfText;
+					isFirstQuestion = false;
+				}
+				
+				fetch("/ask_ai", {
+					method:"POST",
+					headers: {"Content_Type": "application/json"},
+					body: JSON.stringify(requestData)
+				})
+				.then(res => res.json())
+				.then(data => {
+					const ul = document.getElementById("chatBox");
+					const li = document.createElement("li");
+					li.textContent = "AI : " + data.response;
+					ul.appendChild(li);
+				});
+			});
+		</script>
+	</th:block>
 </body>
 </html>
