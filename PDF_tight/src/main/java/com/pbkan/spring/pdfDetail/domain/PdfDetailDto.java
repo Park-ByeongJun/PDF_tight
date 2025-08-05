@@ -2,6 +2,8 @@ package com.pbkan.spring.pdfDetail.domain;
 
 import java.time.LocalDateTime;
 
+import com.pbkan.spring.member.domain.Member;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,22 +27,22 @@ public class PdfDetailDto {
 	private String pdf_text;
 	private LocalDateTime up_time;
 	
-	public PdfDetail toEntity() {
+	public PdfDetail toEntity(Member member) {
 		return PdfDetail.builder()
 				//.pdfNum(pdf_num)
-				.memId(mem_id)
+				.member(member)
 				.pdfTitle(pdf_title)
 				.oriFilename(ori_filename)
 				.chnFilename(chn_filename)
 				.pdfText(pdf_text)
-				.upTime(up_time)
+				.upTime(LocalDateTime.now())
 				.build();
 	}
 	
 	public PdfDetailDto toDto(PdfDetail pdfDetail) {
 		return PdfDetailDto.builder()
 				.pdf_num(pdfDetail.getPdfNum())
-				.mem_id(pdfDetail.getMemId())
+				.mem_id(pdfDetail.getMember().getMemId())
 				.pdf_title(pdfDetail.getPdfTitle())
 				.ori_filename(pdfDetail.getOriFilename())
 				.chn_filename(pdfDetail.getChnFilename())

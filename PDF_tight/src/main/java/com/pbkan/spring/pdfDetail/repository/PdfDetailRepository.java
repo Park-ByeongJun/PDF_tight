@@ -23,6 +23,6 @@ public interface PdfDetailRepository extends JpaRepository<PdfDetail, Long>{
                          @Param("chnFilename") String chnFilename,
                          @Param("pdfText") String pdfText);
     
-    @Query("SELECT a FROM PdfDetail a WHERE a.memId = :memId")
+    @Query("SELECT a FROM PdfDetail a WHERE a.member.memId = :memId")
     List<PdfDetail> findByMemId(@Param("memId") String memId);
 }

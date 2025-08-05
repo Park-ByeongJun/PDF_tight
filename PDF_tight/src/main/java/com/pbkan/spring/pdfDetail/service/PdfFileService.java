@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.pbkan.spring.member.domain.Member;
+import com.pbkan.spring.member.repository.MemberRepository;
 import com.pbkan.spring.pdfDetail.domain.PdfDetail;
 import com.pbkan.spring.pdfDetail.domain.PdfDetailDto;
 import com.pbkan.spring.pdfDetail.repository.PdfDetailRepository;
@@ -20,10 +22,12 @@ public class PdfFileService {
 	private String fileDir = "C:\\PDF_tight\\upload\\";
 	
 	private final PdfDetailRepository pdfDetailRepository;
+	private final MemberRepository memberRepository;
 	
 	@Autowired
-	public PdfFileService(PdfDetailRepository pdfDetailRepository) {
+	public PdfFileService(PdfDetailRepository pdfDetailRepository, MemberRepository memberRepository) {
 		this.pdfDetailRepository = pdfDetailRepository;
+		this.memberRepository = memberRepository;
 	}
 	
 	public File upload(MultipartFile file) {
@@ -69,7 +73,10 @@ public class PdfFileService {
 			dto.setChn_filename(chnFileName);
 			dto.setPdf_title(title);
 			dto.setPdf_text(bringText);
-			PdfDetail pdfDetail = dto.toEntity();
+			
+			Member member = memberRepository.findBymemId(memId);
+			
+			PdfDetail pdfDetail = dto.toEntity(member);
 
 			pdfDetailRepository.insertPdfDetail(
 					memId,

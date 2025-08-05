@@ -23,10 +23,10 @@ public class ChatMessageDto {
 	private String content;
 	private LocalDateTime message_time;
 	
-	public ChatMessage toEntity() {
+	public ChatMessage toEntity(ChatSession chatSession) {
 		return ChatMessage.builder()
 				.messageId(message_id)
-				.sessionId(session_id)
+				.chatSession(chatSession)
 				.role(role)
 				.content(content)
 				.messageTime(message_time)
@@ -36,7 +36,7 @@ public class ChatMessageDto {
 	public ChatMessageDto toDto(ChatMessage chatMessage) {
 		return ChatMessageDto.builder()
 				.message_id(chatMessage.getMessageId())
-				.session_id(chatMessage.getSessionId())
+				.session_id(chatMessage.getChatSession().getSessionId())
 				.role(chatMessage.getRole())
 				.content(chatMessage.getContent())
 				.message_time(chatMessage.getMessageTime())

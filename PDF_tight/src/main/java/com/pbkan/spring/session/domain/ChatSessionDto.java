@@ -2,6 +2,8 @@ package com.pbkan.spring.session.domain;
 
 import java.time.LocalDateTime;
 
+import com.pbkan.spring.member.domain.Member;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,10 +23,10 @@ public class ChatSessionDto {
 	private String mem_id;
 	private LocalDateTime session_time;
 	
-	public ChatSession toEntity() {
+	public ChatSession toEntity(Member member) {
 		return ChatSession.builder()
 		.sessionId(session_id)
-		.memId(mem_id)
+		.member(member)
 		.sessionTime(session_time)
 		.build();
 	}
@@ -32,7 +34,7 @@ public class ChatSessionDto {
 	public ChatSessionDto toDto(ChatSession chatSession) {
 		return ChatSessionDto.builder()
 				.session_id(chatSession.getSessionId())
-				.mem_id(chatSession.getMemId())
+				.mem_id(chatSession.getMember().getMemId())
 				.session_time(chatSession.getSessionTime())
 				.build();
 	}

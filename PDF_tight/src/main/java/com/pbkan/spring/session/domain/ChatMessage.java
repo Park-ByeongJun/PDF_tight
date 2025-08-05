@@ -9,7 +9,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -30,14 +32,15 @@ public class ChatMessage {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int messageId;
 	
-	@Column(name="session_id")
-	private int sessionId;
+	@ManyToOne
+	@JoinColumn(name="session_id")
+	private ChatSession chatSession;
 	
 	@Column(name="role")
 	private String role;
 	
 	@Lob
-	@Column(name="content")
+	@Column(name="content", columnDefinition = "text")
 	private String content;
 	
 	@Column(name="message_time")
